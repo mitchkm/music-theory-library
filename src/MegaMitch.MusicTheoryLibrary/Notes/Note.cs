@@ -21,7 +21,19 @@ public sealed partial class Note : IComparable<Note>, IEquatable<Note>
         _semitonesFromC0 = semitonesFromC0;
     }
 
-    public Note(PitchClass pc, Octave octave) : this(ToSemitones(pc, octave)) { }
+    private Note(PitchClass pc, Octave octave) : this(ToSemitones(pc, octave)) { }
+
+    public PitchClass PitchClass 
+    {
+        get
+        {
+            // double modulus to properly handle negative values
+            int pcValue = ((_semitonesFromC0 % NumberOfSemitones) + NumberOfSemitones) % NumberOfSemitones;
+            return (PitchClass) pcValue;
+        }
+    }
+
+    public Octave Octave => (Octave) (_semitonesFromC0 / NumberOfSemitones);
 
     #region Equality
 
@@ -77,7 +89,7 @@ public sealed partial class Note : IComparable<Note>, IEquatable<Note>
     ///         <item>Greater than zero: The Note is higher pitch than the other.</item>
     ///     </list>
     /// </returns>
-    public int CompareTo(Note other)
+    public int CompareTo(Note? other)
     {
         // check null
         if (ReferenceEquals(other, null))
