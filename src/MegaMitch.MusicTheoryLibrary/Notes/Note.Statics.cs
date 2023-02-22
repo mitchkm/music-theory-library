@@ -8,7 +8,7 @@ public sealed partial class Note
     #region NoteCache
 
     // Dictionary for caching notes by semitone; Notes are immutable only one reference per pitch is needed.
-    private static Dictionary<int, Note> _notesBySemitones = new Dictionary<int, Note>();
+    private static readonly Dictionary<int, Note> NotesBySemitones = new Dictionary<int, Note>();
 
     public static void CacheNotesInSemitonesRange(int minSemitone, int maxSemitone)
     {
@@ -20,14 +20,14 @@ public sealed partial class Note
 
     private static Note GetNote(int semitones)
     {
-        if (_notesBySemitones.TryGetValue(semitones, out Note note))
+        if (NotesBySemitones.TryGetValue(semitones, out Note note))
         {
             return note;
         }
 
-        // new semitone, make new note
+        // new semitone value, make new note
         Note newNote = new Note(semitones);
-        _notesBySemitones[semitones] = newNote;
+        NotesBySemitones[semitones] = newNote;
         return newNote;
     }
 
@@ -45,7 +45,7 @@ public sealed partial class Note
 
         if (!match.Success)
         {
-            throw new ArgumentException($"String '{noteName}' does not match Note name format");
+            throw new ArgumentException($"String: '{noteName}' is not a valid format to be parsed.");
         }
 
         GroupCollection groups = match.Groups;

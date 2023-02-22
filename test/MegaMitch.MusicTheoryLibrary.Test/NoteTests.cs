@@ -34,7 +34,7 @@ public class NoteTests
             Console.WriteLine($"{temp} % 12 = {(temp % 12) + 12}");
         }
 
-        Console.WriteLine(Note.Parse("Bx9").PitchClass);
+        Console.WriteLine(Note.Parse("Bb-1"));
     }
 
     [Test]
@@ -47,8 +47,8 @@ public class NoteTests
             Assert.That(_c4.PitchClass, Is.EqualTo(PitchClass.C));
             Assert.That(_c4.Octave, Is.EqualTo(Octave.OneLine));
         });
-        Note noteDoubleContra = Note.GetNote(PitchClass.D, Octave.SubContra);
+        Note noteDoubleContra = Note.GetNote(PitchClass.D, Octave.DoubleContra);
         Assert.That(noteDoubleContra.PitchClass, Is.EqualTo(PitchClass.D));
-        Assert.That(noteDoubleContra.Octave, Is.EqualTo(Octave.SubContra));
+        Assert.That(noteDoubleContra.Octave, Is.EqualTo(Octave.DoubleContra));
     }
 }

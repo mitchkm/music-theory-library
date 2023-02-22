@@ -2,7 +2,7 @@
 
 /// <summary>
 /// Enum representing each Pitch Class in music and its corresponding Integer notation from C=0 to B=11.
-/// Source: <a href="https://en.wikipedia.org/wiki/Pitch_class">https://en.wikipedia.org/wiki/Pitch_class</a><br/>
+/// Source: <a href="https://en.wikipedia.org/wiki/Pitch_class">https://en.wikipedia.org/wiki/Pitch_class</a>
 /// </summary>
 public enum PitchClass
 {
