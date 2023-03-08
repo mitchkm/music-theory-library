@@ -114,4 +114,9 @@ public sealed partial class Note
     /// <param name="octave">The Octave of the note.</param>
     /// <returns>Note representing the Pitch Class and Octave.</returns>
     public static Note GetNote(PitchClass pc, Octave octave) => GetNote(ToSemitones(pc, octave));
+
+    public static int DistanceBetween(Note noteA, Note noteB)
+    {
+        return noteA._semitonesFromC0 - noteB._semitonesFromC0;
+    }
 }

@@ -14,7 +14,7 @@ public sealed partial class Note : IComparable<Note>, IEquatable<Note>
 
     private static int ToSemitones(PitchClass pc, Octave octave)
     {
-        return (int)pc + (int)octave * SemitonesInOctave;
+        return (int) pc + (int) octave * SemitonesInOctave;
     }
 
     // A Note can be represented solely by the distance in semitones/half steps from a specific Note.
@@ -29,7 +29,7 @@ public sealed partial class Note : IComparable<Note>, IEquatable<Note>
     #endregion
 
     #region Constructors
-    
+
     private Note(int semitonesFromC0)
     {
         _semitonesFromC0 = semitonesFromC0;
@@ -37,7 +37,9 @@ public sealed partial class Note : IComparable<Note>, IEquatable<Note>
         Octave = CalcOctave();
     }
 
-    private Note(PitchClass pc, Octave octave) : this(ToSemitones(pc, octave)) { }
+    private Note(PitchClass pc, Octave octave) : this(ToSemitones(pc, octave))
+    {
+    }
 
     #endregion
 
@@ -72,15 +74,13 @@ public sealed partial class Note : IComparable<Note>, IEquatable<Note>
     {
         return Equals(noteA, noteB);
     }
-    
+
     public static bool operator !=(Note noteA, Note noteB)
     {
         return !Equals(noteA, noteB);
     }
 
     #endregion
-
-    #region Comparisons
 
     /// <summary>
     /// Compares two <see cref="Note">Notes</see>.
@@ -106,14 +106,43 @@ public sealed partial class Note : IComparable<Note>, IEquatable<Note>
         return _semitonesFromC0.CompareTo(other._semitonesFromC0);
     }
 
-    #endregion
-
     public override string ToString()
     {
-        return ToName();
+        return $"{ToName()} ({_semitonesFromC0})";
+    }
+
+    /// <summary>
+    /// Get the distance between the current Note and the one provided.
+    /// </summary>
+    /// <param name="note">Note to compare to for distance.</param>
+    /// <returns>The number of semitones from current Note to one provided. Can be negative.</returns>
+    public int DistanceTo(Note note)
+    {
+        return Note.DistanceBetween(this, note);
+    }
+
+    /// <summary>
+    /// Transpose the given Note up in pitch.
+    /// </summary>
+    /// <param name="distanceInSemitones">Number of semitones to transpose Note.</param>
+    /// <returns>New Note of the resultant pitch.</returns>
+    public Note TransposeUp(int distanceInSemitones)
+    {
+        return GetNote(_semitonesFromC0 + distanceInSemitones);
+    }
+
+    /// <summary>
+    /// Transpose the given Note down in pitch.
+    /// </summary>
+    /// <param name="distanceInSemitones">Number of semitones to transpose Note.</param>
+    /// <returns>New Note of the resultant pitch.</returns>
+    public Note TransposeDown(int distanceInSemitones)
+    {
+        return TransposeUp(-distanceInSemitones);
     }
 
     #region DerivedMusicValues
+
     public int ToMidi(Octave middleCOctave = Octave.OneLine)
     {
         Note middleC = GetNote(PitchClass.C, middleCOctave);
@@ -142,7 +171,7 @@ public sealed partial class Note : IComparable<Note>, IEquatable<Note>
         {
             PitchClass.C => "C",
             PitchClass.CSharp or PitchClass.DFlat => useSharps ? "C#" : "Db",
-            PitchClass.D  => "D",
+            PitchClass.D => "D",
             PitchClass.DSharp or PitchClass.EFlat => useSharps ? "D#" : "Eb",
             PitchClass.E => "E",
             PitchClass.F => "F",
@@ -157,19 +186,19 @@ public sealed partial class Note : IComparable<Note>, IEquatable<Note>
         name += ((int) Octave).ToString();
         return name;
     }
-    
+
     private PitchClass CalcPitchClass()
     {
         // double modulus to properly handle negative values
-        int pcValue = ((_semitonesFromC0 % SemitonesInOctave) + SemitonesInOctave) % SemitonesInOctave;
+        int pcValue = (_semitonesFromC0 % SemitonesInOctave + SemitonesInOctave) % SemitonesInOctave;
         return (PitchClass) pcValue;
     }
 
     private Octave CalcOctave()
     {
-        int oct = (_semitonesFromC0 / SemitonesInOctave);
+        int oct = _semitonesFromC0 / SemitonesInOctave;
         oct -= _semitonesFromC0 < 0 ? 1 : 0;
-        
+
         return (Octave) oct;
     }
 
